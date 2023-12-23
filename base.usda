@@ -1,0 +1,56 @@
+#usda 1.0
+
+def Xform "root" (
+    kind = "assembly"
+) {
+    def Scope "Materials" {
+    }
+
+    def Xform "Geom" {
+    }
+
+    def Scope "Cameras" {
+    }
+}
+
+class SphereLight "_class_headlight" {
+    float inputs:intensity = 350000
+    bool treatAsPoint = 1
+}
+
+class Material "_class_material" {
+    token outputs:surface.connect = </_class_material/Shader.outputs:surface>
+
+    def Shader "Shader"
+    {
+        uniform token info:id = "UsdPreviewSurface"
+        color3f inputs:diffuseColor = (1, 1, 1)
+        float inputs:metallic = 0.5
+        float inputs:opacity = 1
+        float inputs:roughness = 0.5
+        token outputs:surface
+    }
+}
+
+# a unit cube that spans (0,0,0) to (1,1,1)
+# designed to be scaled
+class Xform "_class_cube" {
+    def Cube "cube"
+    {
+        double size = 1
+        double3 xformOp:translate:corner = (0.5, 0.5, 0.5)
+        uniform token[] xformOpOrder = ["xformOp:translate:corner"]
+    }
+}
+
+# a unit sphere
+# designed to be scaled
+class Xform "_class_sphere" {
+    def Sphere "sphere"
+    {
+        double radius = 1
+    }
+}
+
+# a unit torus
+# it's actually possible to use deformations to adjust the torus!
